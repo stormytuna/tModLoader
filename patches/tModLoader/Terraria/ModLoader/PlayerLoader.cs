@@ -115,14 +115,6 @@ namespace Terraria.ModLoader
 			}
 		}
 
-		private static HookList HookClientClone = AddHook<Action<ModPlayer>>(p => p.clientClone);
-
-		public static void clientClone(Player player, Player clientClone) {
-			foreach (int index in HookClientClone.arr) {
-				player.modPlayers[index].clientClone(clientClone.modPlayers[index]);
-			}
-		}
-
 		private static HookList HookSyncPlayer = AddHook<Action<int, int, bool>>(p => p.SyncPlayer);
 
 		public static void SyncPlayer(Player player, int toWho, int fromWho, bool newPlayer) {
@@ -131,11 +123,11 @@ namespace Terraria.ModLoader
 			}
 		}
 
-		private static HookList HookSendClientChanges = AddHook<Action<ModPlayer>>(p => p.SendClientChanges);
+		private static HookList HookSendClientChanges = AddHook<Action>(p => p.SendClientChanges);
 
-		public static void SendClientChanges(Player player, Player clientPlayer) {
+		public static void SendClientChanges(Player player) {
 			foreach (int index in HookSendClientChanges.arr) {
-				player.modPlayers[index].SendClientChanges(clientPlayer.modPlayers[index]);
+				player.modPlayers[index].SendClientChanges();
 			}
 		}
 

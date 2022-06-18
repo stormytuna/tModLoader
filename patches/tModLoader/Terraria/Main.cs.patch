@@ -1424,11 +1424,12 @@
  				if (Main.player[myPlayer].buffType[num4] != player.buffType[num4])
  					flag3 = true;
  			}
-@@ -13124,6 +_,8 @@
+@@ -13124,6 +_,9 @@
  			if (flag)
  				NetMessage.SendData(138);
  
-+			PlayerLoader.SendClientChanges(Main.player[myPlayer], clientPlayer);
++			// Recently changed: Mod code shouldn't use clientPlayer, as it's too expensive to clone it together with mod data.
++			PlayerLoader.SendClientChanges(Main.player[myPlayer]);
 +
  			clientPlayer = (Player)Main.player[myPlayer].clientClone();
  		}

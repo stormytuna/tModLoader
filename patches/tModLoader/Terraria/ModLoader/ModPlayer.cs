@@ -37,7 +37,6 @@ namespace Terraria.ModLoader
 			base.ValidateType();
 			
 			LoaderUtils.MustOverrideTogether(this, p => SaveData, p => LoadData);
-			LoaderUtils.MustOverrideTogether(this, p => p.clientClone, p => p.SendClientChanges);
 		}
 
 		protected sealed override void Register() {
@@ -100,13 +99,6 @@ namespace Terraria.ModLoader
 		}
 
 		/// <summary>
-		/// Allows you to copy information about this player to the clientClone parameter. You should copy information that you intend to sync between server and client. This hook is called in the Player.clientClone method. See SendClientChanges for more info.
-		/// </summary>
-		/// <param name="clientClone"></param>
-		public virtual void clientClone(ModPlayer clientClone) {
-		}
-
-		/// <summary>
 		/// Allows you to sync information about this player between server and client. The toWho and fromWho parameters correspond to the remoteClient/toClient and ignoreClient arguments, respectively, of NetMessage.SendData/ModPacket.Send. The newPlayer parameter is whether or not the player is joining the server (it is true on the joining client).
 		/// </summary>
 		/// <param name="toWho"></param>
@@ -116,10 +108,21 @@ namespace Terraria.ModLoader
 		}
 
 		/// <summary>
-		/// Allows you to sync any information that has changed between the server and client. Here, you should check the information you have copied in the clientClone parameter; if they differ between this player and the clientPlayer parameter, then you should send that information using NetMessage.SendData or ModPacket.Send.
+		/// Called whenever the game tries to synchronize the local player's data with the server. <br/>
+		/// Here you should create copies of the data you synchronize, after comparing the current values to the old copies, and sending what's different via network packets.
+		/// <para/> <b>Example:</b>
+		/// <code>
+		/// if (magicSpellIsActive != magicSpellWasActive) {
+		///		ModPacket packet = Mod.GetPacket();
+		///		packet.Write((byte)MyModMessageType.MagicSpellSync);
+		///		packet.Write(magicSpellIsActive);
+		///		packet.Send();
+		///		
+		///		magicSpellWasActive = magicSpellIsActive;
+		/// }
+		/// </code>
 		/// </summary>
-		/// <param name="clientPlayer"></param>
-		public virtual void SendClientChanges(ModPlayer clientPlayer) {
+		public virtual void SendClientChanges() {
 		}
 
 		/// <summary>

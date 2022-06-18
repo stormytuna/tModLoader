@@ -5428,30 +5428,78 @@
  			Main.mouseItem.TurnToAir();
  		}
  
-@@ -37855,6 +_,7 @@
+@@ -37848,13 +_,20 @@
+ 		}
+ 
+ 		public object clientClone() {
++			Player player = new Player(setupModData: true);
++			/*
+ 			Player player = new Player();
++			*/
++
+ 			player.zone1 = zone1;
+ 			player.zone2 = zone2;
+ 			player.zone3 = zone3;
  			player.zone4 = zone4;
  			player.voidVaultInfo = voidVaultInfo;
  			player.luck = luck;
++
 +			BiomeLoader.CopyCustomBiomesTo(this, player);
++
  			player.extraAccessory = extraAccessory;
  			player.MinionRestTargetPoint = MinionRestTargetPoint;
  			player.MinionAttackTargetNPC = MinionAttackTargetNPC;
-@@ -37907,13 +_,14 @@
+@@ -37879,35 +_,39 @@
+ 			player.hideVisibleAccessory = hideVisibleAccessory;
+ 			player.hideMisc = hideMisc;
+ 			player.shieldRaised = shieldRaised;
++
++			//TML: All usages of Item.Clone() replaced with Item.VanillaClone().
++
+ 			for (int i = 0; i < 59; i++) {
+-				player.inventory[i] = inventory[i].Clone();
++				player.inventory[i] = inventory[i].VanillaClone();
+ 				if (i < armor.Length)
+-					player.armor[i] = armor[i].Clone();
++					player.armor[i] = armor[i].VanillaClone();
+ 
+ 				if (i < dye.Length)
+-					player.dye[i] = dye[i].Clone();
++					player.dye[i] = dye[i].VanillaClone();
+ 
+ 				if (i < miscEquips.Length)
+-					player.miscEquips[i] = miscEquips[i].Clone();
++					player.miscEquips[i] = miscEquips[i].VanillaClone();
+ 
+ 				if (i < miscDyes.Length)
+-					player.miscDyes[i] = miscDyes[i].Clone();
++					player.miscDyes[i] = miscDyes[i].VanillaClone();
+ 
+ 				if (i < bank.item.Length)
+-					player.bank.item[i] = bank.item[i].Clone();
++					player.bank.item[i] = bank.item[i].VanillaClone();
+ 
+ 				if (i < bank2.item.Length)
+-					player.bank2.item[i] = bank2.item[i].Clone();
++					player.bank2.item[i] = bank2.item[i].VanillaClone();
+ 
+ 				if (i < bank3.item.Length)
+-					player.bank3.item[i] = bank3.item[i].Clone();
++					player.bank3.item[i] = bank3.item[i].VanillaClone();
+ 
+ 				if (i < bank4.item.Length)
+-					player.bank4.item[i] = bank4.item[i].Clone();
++					player.bank4.item[i] = bank4.item[i].VanillaClone();
  			}
  
- 			player.trashItem = trashItem.Clone();
+-			player.trashItem = trashItem.Clone();
++			player.trashItem = trashItem.VanillaClone();
++
 -			for (int j = 0; j < 22; j++) {
 +			for (int j = 0; j < MaxBuffs; j++) {
  				player.buffType[j] = buffType[j];
  				player.buffTime[j] = buffTime[j];
  			}
- 
- 			DpadRadial.CopyTo(player.DpadRadial);
- 			CircularRadial.CopyTo(player.CircularRadial);
-+			PlayerLoader.clientClone(this, player);
- 			return player;
- 		}
- 
 @@ -37932,7 +_,7 @@
  			if (Main.tile[x, y - 1] == null)
  				return false;
@@ -5693,18 +5741,27 @@
  				}
  
  				return playerFileData;
-@@ -38886,6 +_,14 @@
+@@ -38885,7 +_,22 @@
+ 			return -1;
  		}
  
- 		public Player() {
-+			ResetDamageClassData();
+-		public Player() {
++		public Player(bool setupModData = true) {
++			if (setupModData) {
++				ResetDamageClassData();
++			}
++			
 +			buffType = new int[MaxBuffs];
 +			buffTime = new int[MaxBuffs];
 +			buffImmune = new bool[BuffLoader.BuffCount]; // TODO: Move all these patches to field initializers.
 +			ownedProjectileCounts = new int[ProjectileLoader.ProjectileCount];
 +			npcTypeNoAggro = new bool[NPCLoader.NPCCount];
-+			PlayerLoader.SetupPlayer(this);
-+			LoaderManager.Get<BiomeLoader>().SetupPlayer(this);
++
++			if (setupModData) {
++				PlayerLoader.SetupPlayer(this);
++				LoaderManager.Get<BiomeLoader>().SetupPlayer(this);
++			}
++			
  			width = 20;
  			height = 42;
  			name = string.Empty;

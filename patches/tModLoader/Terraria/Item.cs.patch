@@ -813,7 +813,7 @@
  						if (type == 4143)
  							num3 -= (float)manaGrabRange;
  
-@@ -46460,17 +_,43 @@
+@@ -46460,17 +_,53 @@
  			}
  		}
  
@@ -821,6 +821,16 @@
 -		public Item DeepClone() => (Item)MemberwiseClone();
 -
 -		public bool IsTheSameAs(Item compareItem) {
++		// Used in Player.clientClone(), does not copy mod data instances as it won't be needed.
++		internal Item VanillaClone() {
++			Item newItem = (Item)MemberwiseClone();
++
++			newItem.ModItem = null;
++			newItem.globalItems = null;
++
++			return newItem;
++		}
++
 +		public Item Clone() {
 +			Item newItem = (Item)MemberwiseClone();
 +
