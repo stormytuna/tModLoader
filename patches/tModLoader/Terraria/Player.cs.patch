@@ -5428,14 +5428,52 @@
  			Main.mouseItem.TurnToAir();
  		}
  
-@@ -37855,6 +_,7 @@
- 			player.zone4 = zone4;
- 			player.voidVaultInfo = voidVaultInfo;
- 			player.luck = luck;
+@@ -37847,7 +_,12 @@
+ 			}
+ 		}
+ 
++		/*
+ 		public object clientClone() {
++		*/
++		public Player clientClone() {
++			//TML: The constructor is replaced with MemberwiseClone() call for the sake of optimization and skipping all kinds of reinitialization.
++			/*
+ 			Player player = new Player();
+ 			player.zone1 = zone1;
+ 			player.zone2 = zone2;
+@@ -37879,6 +_,32 @@
+ 			player.hideVisibleAccessory = hideVisibleAccessory;
+ 			player.hideMisc = hideMisc;
+ 			player.shieldRaised = shieldRaised;
++			*/
++
++			var player = (Player)MemberwiseClone();
++
++			// Mod data
++			player.modPlayers = new ModPlayer[modPlayers.Length];
++
++			for (int i = 0; i < modPlayers.Length; i++) {
++				player.modPlayers[i] = modPlayers[i].NewInstance(player);
++			}
++			
 +			BiomeLoader.CopyCustomBiomesTo(this, player);
- 			player.extraAccessory = extraAccessory;
- 			player.MinionRestTargetPoint = MinionRestTargetPoint;
- 			player.MinionAttackTargetNPC = MinionAttackTargetNPC;
++
++			// Recreate arrays that are about to be filled with clones
++			player.inventory = new Item[inventory.Length];
++			player.armor = new Item[armor.Length];
++			player.dye = new Item[dye.Length];
++			player.miscEquips = new Item[miscEquips.Length];
++			player.miscDyes = new Item[miscDyes.Length];
++			player.bank = new();
++			player.bank2 = new();
++			player.bank3 = new();
++			player.bank4 = new();
++			player.buffType = new int[buffType.Length];
++			player.buffTime = new int[buffTime.Length];
++
+ 			for (int i = 0; i < 59; i++) {
+ 				player.inventory[i] = inventory[i].Clone();
+ 				if (i < armor.Length)
 @@ -37907,13 +_,14 @@
  			}
  
