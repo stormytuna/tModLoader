@@ -130,6 +130,12 @@ namespace Terraria.ModLoader
 			}
 		}
 
+		public static void ClearWorld() {
+			foreach (var system in HookClearWorld.arr) {
+				system.ClearWorld();
+			}
+		}
+
 		public static bool CanWorldBePlayed(PlayerFileData playerData, WorldFileData worldData, out ModSystem rejector) {
 			foreach (var system in HookCanWorldBePlayed.arr) {
 				if (!system.CanWorldBePlayed(playerData, worldData)) {

@@ -588,11 +588,12 @@
  			}
  
  			for (int num8 = 0; num8 < 8000; num8++) {
-@@ -2826,6 +_,7 @@
+@@ -2826,6 +_,8 @@
  
  			setWorldSize();
  			Star.SpawnStars();
 +			TileIO.ClearWorld();
++			SystemLoader.ClearWorld();
  			worldCleared = true;
  		}
  

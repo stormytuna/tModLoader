@@ -79,6 +79,8 @@ namespace Terraria.ModLoader
 
 		private static HookList HookOnWorldUnload = AddHook<Action>(s => s.OnWorldUnload);
 
+		private static HookList HookClearWorld = AddHook<Action>(s => s.ClearWorld);
+
 		private static HookList HookCanWorldBePlayed = AddHook<Func<PlayerFileData, WorldFileData, bool>>(s => s.CanWorldBePlayed);
 
 		private static HookList HookModifyScreenPosition = AddHook<Action>(s => s.ModifyScreenPosition);
