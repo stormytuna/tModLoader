@@ -94,7 +94,11 @@ else
 	fi
 fi
 
-if [[ -f "$dotnet_dir/dotnet" || -f "$dotnet_dir/dotnet.exe" ]]; then
+# Check for nixos, it can't run dynamically linked executables and instead has to use steam-run
+if [[ -f /etc/NIXOS ]]; then
+  echo "Detected NixOS, launching using steam-run. Launch command: steam-run \"$dotnet_dir/dotnet\" tModLoader.dll \"$@\"" 2>&1 | tee -a "$LogFile"
+  exec steam-run "$dotnet_dir/dotnet" tModLoader.dll "$@" 2>"$NativeLog"
+elif [[ -f "$dotnet_dir/dotnet" || -f "$dotnet_dir/dotnet.exe" ]]; then
 	export DOTNET_ROLL_FORWARD=Disable
 	echo "Launched Using Local Dotnet. Launch command: \"$dotnet_dir/dotnet\" tModLoader.dll \"$@\"" 2>&1 | tee -a "$LogFile"
 	[[ -f "$dotnet_dir/dotnet" ]] && chmod a+x "$dotnet_dir/dotnet"
